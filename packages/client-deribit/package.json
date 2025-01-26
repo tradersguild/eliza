@@ -1,0 +1,22 @@
+{
+    "name": "@elizaos/client-deribit",
+    "version": "0.1.0",
+    "type": "module",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsup --format esm --dts",
+        "dev": "tsup --format esm --dts --watch",
+        "test:integration": "ts-node src/test.ts"
+    },
+    "dependencies": {
+        "@elizaos/core": "workspace:*",
+        "node-fetch": "^2.6.7"
+    },
+    "devDependencies": {
+        "typescript": "5.6.3",
+        "tsup": "8.3.5",
+        "@types/node": "^22.8.4",
+        "@types/node-fetch": "^2.6.2"
+    }
+}
