@@ -20,7 +20,7 @@
         "dist"
     ],
     "scripts": {
-        "build": "tsup --format esm --dts --ignoreWatch",
+        "build": "tsup --format esm --no-dts",
         "lint": "eslint --fix  --cache .",
         "watch": "tsc --watch",
         "dev": "tsup --format esm --dts --watch",
