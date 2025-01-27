@@ -1,0 +1,26 @@
+{
+  "name": "@elizaos/plugin-convergence-rfq",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@elizaos/core": "workspace:*",
+    "@solana/web3.js": "^1.87.0",
+    "@types/node": "^20.0.0",
+    "cross-fetch": "^4.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "tsup": "^8.0.0",
+    "@types/bn.js": "^5.1.0"
+  },
+  "peerDependencies": {
+    "@elizaos/core": "workspace:*"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@elizaos/core": "workspace:*",
+    "@elizaos/plugin-convergence-rfq": "workspace:*",
+    // ... other dependencies
+  }
+}
