@@ -3,10 +3,6 @@
     "extends": ["config:recommended"],
     "packageRules": [
         {
-            "groupName": "Discord.js ecosystem",
-            "matchPackageNames": ["/^@discordjs//", "/^discord.js/"]
-        },
-        {
             "groupName": "TypeScript and related",
             "matchPackageNames": [
                 "/^@typescript-eslint//",
@@ -48,7 +44,6 @@
             "groupName": "Audio processing",
             "matchPackageNames": [
                 "/^wav/",
-                "/^@discordjs/opus/",
                 "/^fluent-ffmpeg/",
                 "/^ffmpeg/",
                 "/^@types/wav/"
