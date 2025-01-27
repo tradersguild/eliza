@@ -50,6 +50,7 @@
     },
     "pnpm": {
         "overrides": {
+            "@ai-sdk/provider": "1.x.x",
             "onnxruntime-node": "1.20.1",
             "viem": "2.21.58"
         }
@@ -68,7 +69,9 @@
         "optional": "0.1.4",
         "pnpm": "9.14.4",
         "sharp": "0.33.5",
-        "tslog": "4.9.3"
+        "tslog": "4.9.3",
+        "@ai-sdk/provider": "1.x.x",
+        "@ai-sdk/mistral": "1.x.x"
     },
     "packageManager": "pnpm@9.12.3",
     "workspaces": [

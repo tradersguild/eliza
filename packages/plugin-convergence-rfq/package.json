@@ -5,7 +5,7 @@
   "types": "dist/index.d.ts",
   "type": "module",
   "scripts": {
-    "build": "tsup",
+    "build": "tsup src/index.ts --format esm --dts",
     "dev": "tsup --watch",
     "check-types": "tsc --noEmit"
   },

@@ -1,26 +1,37 @@
-import { Action } from '@elizaos/core';
+import { Action, ActionExample, Handler, IAgentRuntime } from '@elizaos/core';
 import { ConvergenceProvider } from '../providers/convergenceProvider';
 
-export class GetOrdersAction extends Action {
-  provider: ConvergenceProvider;
+export class GetOrdersAction implements Action {
+  private provider!: ConvergenceProvider;
 
-  async execute(params: any) {
-    const { owner } = params;
+  public name = 'getOrders';
+  public description = 'Get orders for an owner address';
+  public examples: ActionExample[][] = [
+    [{
+      content: { text: 'Get orders for address' },
+      user: 'user'
+    }]
+  ];
+  public similes = ['fetch', 'list', 'orders'];
+  public handler: Handler = async (runtime: IAgentRuntime, params: any) => {
+    return this.execute(params);
+  };
 
-    if (!owner) {
-      throw new Error('Owner address is required');
-    }
+  public validate = async (params: any): Promise<boolean> => {
+    return Promise.resolve(!!params.owner);
+  }
 
+  async execute(params: { owner: string }) {
     try {
-      const orders = await this.provider.getOrders(owner);
+      const orders = await this.provider.getOrders(params.owner);
       return {
         success: true,
         data: orders
       };
-    } catch (error) {
+    } catch (error: any) {
       return {
         success: false,
-        error: error.message
+        error: error?.message || 'Unknown error'
       };
     }
   }

@@ -1,32 +1,37 @@
 import { Action, ActionExample, Handler, IAgentRuntime } from '@elizaos/core';
 import { ConvergenceProvider } from '../providers/convergenceProvider';
 
-export class WithdrawCollateralAction implements Action {
+export class CreateRFQAction implements Action {
   private provider!: ConvergenceProvider;
 
-  public name = 'withdrawCollateral';
-  public description = 'Withdraw collateral from your account';
+  public name = 'createRFQ';
+  public description = 'Create a new RFQ';
   public examples: ActionExample[][] = [
     [{
-      content: { text: 'Withdraw collateral from account' },
+      content: { text: 'Create RFQ for instrument' },
       user: 'user'
     }]
   ];
-  public similes = ['withdraw', 'remove', 'take'];
+  public similes = ['request', 'quote', 'rfq'];
   public handler: Handler = async (runtime: IAgentRuntime, params: any) => {
     return this.execute(params);
   };
 
   public validate = async (params: any): Promise<boolean> => {
-    return Promise.resolve(!!(params.amount && params.currency));
+    return Promise.resolve(!!(params.instrumentId && params.side && params.quantity));
   }
 
-  async execute(params: {amount: number, currency: string}) {
+  async execute(params: {
+    instrumentId: string,
+    side: 'BUY' | 'SELL',
+    quantity: number,
+    price?: number
+  }) {
     try {
-      const result = await this.provider.withdrawCollateral({ amount: params.amount, currency: params.currency });
+      const rfq = await this.provider.createRFQ(params);
       return {
         success: true,
-        data: result
+        data: rfq
       };
     } catch (error: any) {
       return {

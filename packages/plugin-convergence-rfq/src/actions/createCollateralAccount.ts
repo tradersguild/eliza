@@ -1,28 +1,37 @@
-import { Action } from '@elizaos/core';
+import { Action, ActionExample, Content, Handler, IAgentRuntime } from '@elizaos/core';
 import { ConvergenceProvider } from '../providers/convergenceProvider';
 
-export class CreateCollateralAccountAction extends Action {
-  provider: ConvergenceProvider;
+export class CreateCollateralAccountAction implements Action {
+  private provider!: ConvergenceProvider;
+
+  public name = 'createCollateralAccount';
+  public description = 'Create a new collateral account';
+  public examples: ActionExample[][] = [
+    [{
+      content: { text: 'Create collateral account' },
+      user: 'user'
+    }]
+  ];
+  public similes = ['create', 'account', 'collateral'];
+  public handler: Handler = async (runtime: IAgentRuntime, params: any) => {
+    return this.execute(params);
+  };
+
+  public validate = async (params: any): Promise<boolean> => {
+    return Promise.resolve(!!params.currency);
+  }
 
   async execute(params: {currency: string}) {
     try {
-      // Get the wallet's public key
-      const walletPubkey = this.provider.getWalletPublicKey();
-
-      // Create the collateral account
-      const account = await this.provider.createCollateralAccount({
-        ...params,
-        owner: walletPubkey.toString()
-      });
-
+      const result = await this.provider.createCollateralAccount({ currency: params.currency });
       return {
         success: true,
-        data: account
+        data: result
       };
-    } catch (error) {
+    } catch (error: any) {
       return {
         success: false,
-        error: error.message
+        error: error?.message || 'Unknown error'
       };
     }
   }
