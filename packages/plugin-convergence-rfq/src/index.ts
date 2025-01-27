@@ -8,10 +8,12 @@ import { GetInstrumentsAction } from './actions/getInstruments';
 import { AddCollateralAction } from './actions/addCollateral';
 import { WithdrawCollateralAction } from './actions/withdrawCollateral';
 
-export default class ConvergenceRFQPlugin extends Plugin {
+export class ConvergenceRFQPlugin extends Plugin {
   name = 'convergence-rfq';
 
   async setup() {
+    await super.setup();
+
     // Register providers
     await this.registerProvider('convergence', ConvergenceProvider);
 
