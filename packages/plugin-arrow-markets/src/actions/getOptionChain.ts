@@ -6,27 +6,39 @@ import {
     HandlerCallback,
     elizaLogger,
 } from "@elizaos/core";
+import { validateArrowConfig } from "../enviroment";
+import axios from "axios";
 
 export const getOptionChain: Action = {
     name: "GET_OPTION_CHAIN",
     similes: ["OPTIONS", "TRADING", "DERIVATIVES", "MARKETS"],
     description: "Get the option chain data for a given ticker.",
-    validate: async (_runtime: IAgentRuntime) => {
-        return true;
+    validate: async (runtime: IAgentRuntime) => {
+        try {
+            await validateArrowConfig(runtime);
+            return true;
+        } catch (error) {
+            return false;
+        }
     },
     handler: async (
-        _runtime: IAgentRuntime,
+        runtime: IAgentRuntime,
         _message: Memory,
         _state: State,
         _options: { [key: string]: unknown },
         callback: HandlerCallback
     ) => {
         try {
-            console.log("Getting option chain data");
+            const config = await validateArrowConfig(runtime);
+            const response = await axios.get(
+                `${config.ARROW_API_URL}/options/chain`
+            );
+
             elizaLogger.success("Successfully fetched option chain");
             if (callback) {
                 callback({
                     text: "Option chain data retrieved",
+                    content: response.data,
                 });
                 return true;
             }
