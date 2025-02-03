@@ -12,7 +12,7 @@ import type { IAgentRuntime } from '@elizaos/core';
 import type { AppVersion, Network, SDKAppVersion } from '@shapeshifter-technologies/arrow-rfq-sdk/lib/types';
 import { getRFQAppVersion } from '../utils';
 
-export const submitRFQOrder = async (
+export const submitRFEOrder = async (
     runtime: IAgentRuntime,
     position: Position,
     slippage: number,
