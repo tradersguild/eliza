@@ -19,6 +19,7 @@
     ],
     "dependencies": {
         "@elizaos/core": "workspace:*",
+        "@shapeshifter-technologies/arrow-rfq-sdk": "1.0.0",
         "axios": "0.24.0",
         "dayjs": "1.11.5",
         "dotenv": "10.0.0",
