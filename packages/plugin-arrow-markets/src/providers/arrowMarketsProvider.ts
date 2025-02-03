@@ -3,6 +3,10 @@ import { ethers } from 'ethers';
 import { IAgentRuntime, Memory, State } from '@elizaos/core';
 import { Ticker } from '@shapeshifter-technologies/arrow-rfq-sdk';
 import { ARROW_RFQ_API_URL } from '../constants';
+import { getStrikeGrid } from '@shapeshifter-technologies/arrow-rfq-sdk/lib/common/utils/strike-grid';
+import { AppVersion, ContractType, Network } from '@shapeshifter-technologies/arrow-rfq-sdk';
+import axios from 'axios';
+import { convertTickerDateFormat } from '@shapeshifter-technologies/arrow-rfq-sdk/lib/common/utils/time';
 
 export class ArrowMarketsProvider implements Provider {
   public name = 'arrowmarkets';
@@ -18,8 +22,54 @@ export class ArrowMarketsProvider implements Provider {
   }
 
   async getInstruments(ticker: Ticker) {
-    // TODO: Implement get instruments
-    return [];
+    try {
+      // Get available expirations
+      const { data: { expirations } } = await axios.get(
+        `${this.baseUrl}/options/expirations`
+      );
+
+      const instruments = [];
+
+      // For each expiration, get strike grids for both calls and puts
+      for (const expiration of expirations) {
+        const readableExpiration = convertTickerDateFormat(new Date(expiration * 1000).toISOString().slice(0,10).replace(/-/g, ''));
+
+        // Get call options grid
+        const callGrid = await getStrikeGrid(
+          ticker,
+          readableExpiration,
+          ContractType.CALL,
+          AppVersion.TESTNET,
+          Network.Testnet
+        );
+
+        // Get put options grid
+        const putGrid = await getStrikeGrid(
+          ticker,
+          readableExpiration,
+          ContractType.PUT,
+          AppVersion.TESTNET,
+          Network.Testnet
+        );
+
+        instruments.push({
+          expiration: expiration * 1000,
+          calls: {
+            buy: callGrid.buyStrikeGrid,
+            sell: callGrid.sellStrikeGrid
+          },
+          puts: {
+            buy: putGrid.buyStrikeGrid,
+            sell: putGrid.sellStrikeGrid
+          }
+        });
+      }
+
+      return instruments;
+    } catch (error) {
+      console.error('Error getting instruments:', error);
+      throw error;
+    }
   }
 
 // Helper method to get wallet address
