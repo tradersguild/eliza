@@ -1,14 +1,23 @@
 import { ethers } from 'ethers';
 import { validateArrowConfig } from '../enviroment';
 import { elizaLogger } from '@elizaos/core';
-
-// Pending import missing functions and types from arrow-rfq-sdk once published
+import {
+    OrderType,
+    PositionStrategy
+} from '@shapeshifter-technologies/arrow-rfq-sdk/lib/common/types/option';
+import { determinePositionStrategyType } from '@shapeshifter-technologies/arrow-rfq-sdk/lib/common/utils/parsing';
+import { getCurrentTimeUTC } from '@shapeshifter-technologies/arrow-rfq-sdk/lib/common/utils/time';
+import type { Position, Option } from '@shapeshifter-technologies/arrow-rfq-sdk/lib/types/option';
+import type { IAgentRuntime } from '@elizaos/core';
+import type { AppVersion, Network, SDKAppVersion } from '@shapeshifter-technologies/arrow-rfq-sdk/lib/types';
+import { getRFQAppVersion } from '../utils';
 
 export const submitRFQOrder = async (
     runtime: IAgentRuntime,
-    position: Position, // TODO: Import from arrow-rfq-sdk once published
-    appVersion: AppVersion, // TODO: Import from arrow-rfq-sdk once published
-    network: Network // TODO: Import from arrow-rfq-sdk once published
+    position: Position,
+    slippage: number,
+    appVersion = AppVersion.TESTNET,
+    network: Network.Testnet
 ): Promise<{
     executionPrice: null;
     orderId: string;
@@ -105,8 +114,8 @@ export const submitRFQOrder = async (
             isOpeningPosition,
             slippage,
             signer,
-            config.NETWORK,
-            config.APP_VERSION
+            network,
+            appVersion
         );
 
         if (isOpeningPosition) {
@@ -134,8 +143,8 @@ export const submitRFQOrder = async (
 
         const orderSubmission = await submitRFEOrder(
             preparedOrder.preparedParameters,
-            config.APP_VERSION,
-            config.NETWORK
+            appVersion,
+            network
         );
 
         return {
