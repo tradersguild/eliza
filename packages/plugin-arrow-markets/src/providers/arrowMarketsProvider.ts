@@ -4,10 +4,10 @@ import { IAgentRuntime, Memory, State } from '@elizaos/core';
 import { Ticker } from '@shapeshifter-technologies/arrow-rfq-sdk';
 import { ARROW_RFQ_API_URL } from '../constants';
 import { getStrikeGrid } from '@shapeshifter-technologies/arrow-rfq-sdk/lib/common/utils/strike-grid';
-import { AppVersion, ContractType, Network } from '@shapeshifter-technologies/arrow-rfq-sdk';
+import { AppVersion, ContractType, Network, OrderType } from '@shapeshifter-technologies/arrow-rfq-sdk';
 import axios from 'axios';
 import { convertTickerDateFormat } from '@shapeshifter-technologies/arrow-rfq-sdk/lib/common/utils/time';
-
+import { getBulkRFQOptionPrice } from '@shapeshifter-technologies/arrow-rfq-sdk';
 export class ArrowMarketsProvider implements Provider {
   public name = 'arrowmarkets';
 
@@ -72,7 +72,35 @@ export class ArrowMarketsProvider implements Provider {
     }
   }
 
-// Helper method to get wallet address
+  async getLatestQuote(
+    options: Array<{
+      contractType: ContractType;
+      strike: number;
+      orderType: OrderType;
+      readableExpiration: string;
+      ticker: Ticker;
+    }>,
+    appVersion: AppVersion,
+    networkVersion: Network
+  ) {
+    try {
+      // Get pricing information
+      const pricingInfo = await getBulkRFQOptionPrice(
+        options,
+        appVersion as AppVersion,
+        networkVersion as Network
+      );
+
+      return {
+        pricing: pricingInfo
+      };
+    } catch (error) {
+      console.error('Error creating RFQ:', error);
+      throw error;
+    }
+  }
+
+  // Helper method to get wallet address
   getWalletAddress(): string {
     return this.wallet.address;
   }
