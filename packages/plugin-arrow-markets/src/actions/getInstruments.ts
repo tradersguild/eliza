@@ -1,5 +1,5 @@
 import { Action, ActionExample, Handler, IAgentRuntime } from '@elizaos/core';
-import { Ticker } from '@shapeshifter-technologies/arrow-rfq-sdk';
+import { Ticker, AppVersion, Network } from '@shapeshifter-technologies/arrow-rfq-sdk';
 import { ArrowMarketsProvider } from '../providers/ArrowMarketsProvider';
 
 export class GetInstrumentsAction implements Action {
@@ -25,9 +25,17 @@ export class GetInstrumentsAction implements Action {
     return true;
   }
 
-  async execute(params: { ticker?: Ticker }) {
+  async execute(params: {
+    ticker?: Ticker;
+    appVersion?: AppVersion;
+    networkVersion?: Network;
+  }) {
     try {
-      const instruments = await this.provider.getInstruments(params.ticker);
+      const instruments = await this.provider.getInstruments(
+        params.ticker,
+        params.appVersion || AppVersion.TESTNET,
+        params.networkVersion || Network.Testnet
+      );
 
       return {
         success: true,

@@ -33,14 +33,14 @@ export class RequestPriceQuoteAction implements Action {
       readableExpiration: string;
       ticker: Ticker;
     }>;
-    appVersion: AppVersion;
-    networkVersion: Network;
+    appVersion?: AppVersion;
+    networkVersion?: Network;
   }) {
     try {
       const priceQuote = await this.provider.getLatestQuote(
         params.options,
-        params.appVersion,
-        params.networkVersion
+        params.appVersion || AppVersion.TESTNET,
+        params.networkVersion || Network.Testnet
       );
 
       return {
