@@ -172,6 +172,9 @@ importers:
       '@elizaos/plugin-aptos':
         specifier: workspace:*
         version: link:../packages/plugin-aptos
+      '@elizaos/plugin-arrow-markets':
+        specifier: workspace:*
+        version: link:../packages/plugin-arrow-markets
       '@elizaos/plugin-arthera':
         specifier: workspace:*
         version: link:../packages/plugin-arthera
